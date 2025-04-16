@@ -16,7 +16,7 @@ import torch.backends.cudnn as cudnn
 import sparselearning
 from sparselearning.core import Masking, CosineDecay, LinearDecay
 from sparselearning.models import AlexNet, VGG16, LeNet_300_100, LeNet_5_Caffe, WideResNet, MLP_CIFAR10
-from sparselearning.utils import get_mnist_dataloaders, get_cifar10_dataloaders, get_cifar100_dataloaders
+from sparselearning.utils import get_mnist_dataloaders, get_cifar10_dataloaders, get_cifar100_dataloaders, get_tinyimagenet_dataloaders
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -228,6 +228,9 @@ def main():
         elif args.data == 'cifar100':
             train_loader, valid_loader, test_loader = get_cifar100_dataloaders(args, args.valid_split, max_threads=args.max_threads)
             outputs = 100
+        elif args.data == 'tinyimagenet':
+            train_loader, valid_loader, test_loader = get_tinyimagenet_dataloaders(args, args.valid_split)
+            outputs = 200
         if args.model not in models:
             print('You need to select an existing model via the --model argument. Available models include: ')
             for key in models:

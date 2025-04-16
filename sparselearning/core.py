@@ -383,6 +383,7 @@ class Masking(object):
 
     def truncate_weights(self, pruning_rate):
         print('dynamic sparse training')
+        
         for module in self.modules:
             for name, weight in module.named_parameters():
                 if name not in self.masks: continue
@@ -402,6 +403,7 @@ class Masking(object):
                 self.masks[name][:] = new_mask
 
         self.apply_mask()
+
         for module in self.modules:
             for name, weight in module.named_parameters():
                 if name not in self.masks: continue
@@ -424,6 +426,8 @@ class Masking(object):
                 self.masks[name] = new_mask.float()
 
         self.apply_mask()
+
+        
         total_size = 0
         for name, weight in self.masks.items():
             total_size += weight.numel()

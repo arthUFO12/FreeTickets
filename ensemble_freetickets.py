@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import sparselearning
 from sparselearning.core import Masking, CosineDecay, LinearDecay
 from sparselearning.models import AlexNet, VGG16, LeNet_300_100, LeNet_5_Caffe, WideResNet, MLP_CIFAR10
-from sparselearning.utils import get_mnist_dataloaders, get_cifar10_dataloaders, get_cifar100_dataloaders
+from sparselearning.utils import get_mnist_dataloaders, get_cifar10_dataloaders, get_cifar100_dataloaders, get_tinyimagenet_dataloaders
 import torchvision.transforms as transforms
 import seaborn as sns
 sns.set()
@@ -567,16 +567,17 @@ def main():
     torch.manual_seed(args.seed)
     for i in range(args.iters):
         print_and_log("\nIteration start: {0}/{1}\n".format(i + 1, args.iters))
-
+        
         if args.dataset == 'mnist':
             train_loader, valid_loader, test_loader = get_mnist_dataloaders(args, validation_split=args.valid_split)
         elif args.dataset == 'cifar10':
             train_loader, valid_loader, test_loader = get_cifar10_dataloaders(args, args.valid_split,
                                                                               max_threads=args.max_threads)
-        elif args.data == 'cifar100':
+        elif args.dataset == 'cifar100':
             train_loader, valid_loader, test_loader = get_cifar100_dataloaders(args, args.valid_split,
-                                                                               max_threads=args.max_threads)
+                                                                              max_threads=args.max_threads)
             outputs = 100
+            
 
         if args.model not in models:
             print('You need to select an existing model via the --model argument. Available models include: ')
@@ -655,6 +656,7 @@ def main():
                     plt.yticks(list(np.arange(num_models) + 0.5), list(np.arange(num_models)[::-1] + 1), fontsize=22)
                     print(np.sum(dissimilarity_coeff)/np.sum(dissimilarity_coeff!=0))
                     # plt.savefig("./plots/" + "%s_M=%d_prediction_disagreement_%s.pdf" % (method, num_models, args.dataset))
+                    os.makedirs('./plots', exist_ok=True)
                     plt.savefig("./plots/" + "D_WRN_CF10_dense.pdf")
 
                 if 'predict' in args.mode:
